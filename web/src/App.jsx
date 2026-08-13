@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import FileUpload from './components/FileUpload'
 import BarcodeScanner from './components/BarcodeScanner'
 import ProductInfo from './components/ProductInfo'
+import ExportControls from './components/ExportControls'
 import { searchProductByBarcode, formatPrice } from './utils/excelHandler'
 
 export default function App() {
@@ -122,6 +123,11 @@ export default function App() {
         </div>
       )}
 
+      {/* Step 4: 데이터 내보내기 */}
+      {products.length > 0 && (
+        <ExportControls products={products} fileName={fileName} />
+      )}
+
       {/* 상품 목록 테이블 */}
       {products.length > 0 && (
         <div className="card">
@@ -168,7 +174,7 @@ export default function App() {
       <div style={{ textAlign: 'center', marginTop: '40px', padding: '20px', color: '#999' }}>
         <p>💡 팁: 상품을 클릭하거나 바코드를 스캔하면 가격을 수정할 수 있습니다!</p>
         <p style={{ fontSize: '12px' }}>
-          Made with ❤️ for faster reselling | v1.0.0
+          Made with ❤️ for faster reselling | v1.1.0
         </p>
       </div>
     </div>
