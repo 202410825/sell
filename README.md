@@ -2,13 +2,14 @@
 
 **대형마트(코스트코, 트레이더스) 리셀 상품의 가격을 효율적으로 관리하는 앱**
 
-## 📋 기능
+## 📋 주요 기능
 
-- 📱 바코드 스캔 (웹캠/휴대폰 카메라)
-- 🔍 엑셀 데이터베이스에서 자동 검색
-- 💰 가격 실시간 수정
-- 📊 수정 이력 관리
-- 💾 엑셀 파일 자동 업데이트
+- 📱 **바코드 스캔** (웹캠/휴대폰 카메라)
+- 🔍 **엑셀 데이터베이스 연동** (자동 검색)
+- 💰 **가격 실시간 수정**
+- 📥 **Excel 파일 다운로드** (수정된 데이터)
+- ☁️ **Google Sheets 연동** (향후 기능)
+- 📊 **전체 상품 목록 조회**
 
 ## 📊 엑셀 데이터 구조
 
@@ -16,32 +17,44 @@
 no | 매대번호 | 이미지폴더이름 | 제품번호(바코드) | 카테고리 | 브랜드 | 코스트코 제품명 | 원산지 | 판매가격
 ```
 
+**필수 컬럼:**
+- `제품번호` 또는 `제품번호(바코드)` - 바코드 인식용
+- `코스트코_제품명` - 상품명 표시용
+- `판매가격` - 현재 가격 (없으면 자동 생성)
+
 ## 🛠️ 기술 스택
 
-- **Frontend**: React.js (웹) / React Native (모바일)
-- **Barcode Scanning**: Quagga.js (웹) / react-native-camera (모바일)
-- **Excel**: xlsx / ExcelJS
-- **Backend**: Node.js + Express
-- **Database**: SQLite / Firebase
+- **Frontend**: React.js 18
+- **Barcode Scanning**: Quagga2
+- **Excel**: XLSX
+- **Bundler**: Vite
+- **Styling**: CSS3
+- **API**: (향후 Google Sheets API)
 
 ## 🚀 설치 및 실행
 
+### 1단계: 저장소 클론
 ```bash
-# 1. 저장소 클론
 git clone https://github.com/202410825/sell.git
-cd sell
+cd sell/web
+```
 
-# 2. 웹앱 설치
-cd web
+### 2단계: 의존성 설치
+```bash
 npm install
-npm start
+```
 
-# 3. 모바일앱 설치 (선택)
-cd ../mobile
-npm install
-npx react-native run-android  # Android
-# 또는
-npx react-native run-ios       # iOS
+### 3단계: 개발 서버 실행
+```bash
+npm run dev
+```
+
+브라우저에서 `http://localhost:3000` 접속하면 앱이 자동으로 열립니다!
+
+### 4단계: 프로덕션 빌드
+```bash
+npm run build
+npm run preview
 ```
 
 ## 📂 프로젝트 구조
@@ -52,74 +65,148 @@ sell/
 │   ├── public/
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── BarcodeScanner.jsx
-│   │   │   ├── ProductInfo.jsx
-│   │   │   └── PriceEditor.jsx
-│   │   ├── pages/
-│   │   │   ├── Home.jsx
-│   │   │   └── Dashboard.jsx
+│   │   │   ├── FileUpload.jsx          # 엑셀 파일 업로드
+│   │   │   ├── BarcodeScanner.jsx      # 바코드 스캔
+│   │   │   ├── ProductInfo.jsx         # 상품 정보 & 가격 수정
+│   │   │   └── ExportControls.jsx      # Excel 다운로드
 │   │   ├── utils/
-│   │   │   ├── excelHandler.js
-│   │   │   └── barcodeParser.js
-│   │   ├── App.jsx
-│   │   └── index.jsx
-│   ├── package.json
-│   └── vite.config.js
-│
-├── mobile/                 # 모바일앱 (React Native)
-│   ├── src/
-│   ├── App.tsx
+│   │   │   ├── excelHandler.js         # 엑셀 읽기/쓰기
+│   │   │   └── barcodeScanner.js       # 바코드 인식
+│   │   ├── App.jsx                     # 메인 앱
+│   │   ├── index.jsx                   # 엔트리 포인트
+│   │   └── index.css                   # 스타일
+│   ├── index.html
+│   ├── vite.config.js
 │   └── package.json
 │
-├── backend/                # 백엔드 (Node.js)
-│   ├── src/
-│   │   ├── routes/
-│   │   ├── controllers/
-│   │   └── models/
-│   ├── package.json
-│   └── server.js
+├── mobile/                 # 모바일앱 (React Native) - 개발 예정
+│   └── package.json
 │
 ├── data/                   # 샘플 데이터
-│   └── products.xlsx
+│   └── products_sample.json
 │
+├── .gitignore
 └── README.md
 ```
 
 ## 📝 사용 방법
 
-1. **엑셀 파일 업로드** → 상품 데이터 로드
-2. **바코드 스캔** → EAN-13 형식의 제품번호 인식
-3. **자동 검색** → 해당 상품 정보 표시 (제품명, 현재가격 등)
-4. **가격 수정** → 새 판매가격 입력
-5. **저장** → 엑셀 파일 자동 업데이트
+### 1️⃣ 파일 업로드
+- "📁 엑셀 파일 업로드" 섹션에서 당신의 상품 엑셀 파일 업로드
+- 파일이 자동으로 분석되고 상품 목록이 로드됨
 
-## 💡 향후 기능
+### 2️⃣ 상품 검색
+**방법 A: 바코드 스캔**
+- "📱 바코드 스캔" 섹션에서 바코드 스캔
+- 웹캠 카메라 권한 필요
 
-- [ ] 클라우드 동기화 (Google Drive)
+**방법 B: 수동 검색**
+- "🔍 상품 검색" 섹션에 바코드 또는 상품명 입력
+- 엔터를 누르거나 검색 버튼 클릭
+
+**방법 C: 테이블에서 선택**
+- "📋 전체 상품 목록" 테이블에서 상품 클릭
+
+### 3️⃣ 가격 수정
+- "📦 상품 정보" 섹션에서 새 가격 입력
+- "💾 가격 저장" 버튼 클릭
+- 즉시 메모리에 반영됨
+
+### 4️⃣ 파일 저장
+- "💾 데이터 내보내기" 섹션에서 "📥 Excel 다운로드" 클릭
+- 수정된 데이터가 새로운 Excel 파일로 다운로드됨
+- 파일명: `상품_가격_YYYY-MM-DD.xlsx`
+
+## ✨ 주요 특징
+
+### ✅ 자동화
+- 바코드 스캔으로 자동 검색
+- 엑셀 파일 자동 분석
+- 날짜별 파일명 자동 생성
+
+### ✅ 사용자 친화적
+- 직관적인 UI/UX
+- 실시간 가격 변경 확인
+- 변경 전/후 가격 비교
+
+### ✅ 안전성
+- 로컬에서 데이터 처리 (프라이버시 보호)
+- 원본 파일 보존 (새 파일로 다운로드)
+- 변경 이력 추적 가능
+
+### ✅ 확장성
+- Google Sheets 연동 준비 중
+- 모바일 앱 개발 진행 중
+- 클라우드 백업 기능 예정
+
+## 🔐 보안 & 프라이버시
+
+- ✅ 모든 데이터 처리는 **로컬에서만** 진행
+- ✅ 서버에 데이터 전송 없음
+- ✅ 브라우저 캐시에도 저장 안 됨
+- ✅ 엑셀 파일은 업로드 후 즉시 메모리 로드
+
+## 🚧 향후 계획
+
+- [ ] Google Sheets 실시간 동기화
+- [ ] OneDrive/Dropbox 연동
 - [ ] 가격 변동 통계 및 분석
 - [ ] 여러 계정/지점 관리
 - [ ] 자동 할인율 계산
 - [ ] 재고 관리 기능
 - [ ] 일괄 가격 수정
+- [ ] 모바일 앱 (React Native)
+- [ ] 오프라인 모드
 
-## ⚙️ 시스템 요구사항
+## 📱 모바일 앱 (예정)
 
-- Node.js 16.0 이상
-- npm 또는 yarn
-- 모던 브라우저 (Chrome, Firefox, Safari)
-- Android 10.0 이상 / iOS 14.0 이상
+**Android & iOS 네이티브 앱 개발 진행 중**
 
-## 🔐 보안
+### 추가 기능
+- 📷 휴대폰 카메라 바코드 스캔
+- 📍 GPS 위치 기반 매장 구분
+- 🔔 가격 변경 알림
+- 📊 통계 및 리포트
 
-- 로컬 엑셀 파일 암호화
-- 가격 변경 이력 기록
-- 사용자 권한 관리
+## ❓ FAQ
+
+### Q: 내 엑셀 파일이 손상되지 않나요?
+**A:** 네, 절대 손상되지 않습니다! 앱은 원본 파일을 수정하지 않고, 새로운 파일로 다운로드하게 됩니다.
+
+### Q: 인터넷이 없으면 사용 가능한가요?
+**A:** 네! 모든 처리가 로컬에서 진행되므로 인터넷 없이도 사용 가능합니다. (Google Sheets 연동 제외)
+
+### Q: 바코드 스캔이 안 돼요.
+**A:** 
+1. 브라우저의 카메라 권한 확인
+2. 밝은 환경에서 시도
+3. 바코드를 카메라에 천천히 가져가기
+4. 다른 브라우저 시도 (Chrome 권장)
+
+### Q: Excel 파일이 너무 크면?
+**A:** 10,000개 이상의 상품도 처리 가능하지만, 5,000개 정도에서는 최적입니다.
+
+## 🐛 버그 리포트
+
+문제를 발견하면 GitHub Issues에 등록해주세요:
+https://github.com/202410825/sell/issues
 
 ## 📞 지원
 
-문제가 생기면 Issues에 등록해주세요!
+- 📧 Email: (예정)
+- 💬 GitHub Discussions: (예정)
+- 🔗 문서: (예정)
+
+## 📜 라이센스
+
+MIT License - 자유롭게 사용, 수정, 배포 가능
+
+## 🎉 크레딧
+
+Made with ❤️ for efficient reselling business
 
 ---
 
-**프로젝트 목표**: 엄마의 업무 효율화! 🎯  
-**현재 상태**: 🚧 개발 중
+**버전:** v1.1.0  
+**마지막 업데이트:** 2026-08-11  
+**상태:** 🚧 활발히 개발 중
