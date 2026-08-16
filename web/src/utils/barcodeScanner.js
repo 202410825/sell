@@ -1,4 +1,4 @@
-import Quagga from 'quagga2'
+import Quagga from '@ericblade/quagga2';
 
 /**
  * 바코드 스캐너 초기화
