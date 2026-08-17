@@ -27,7 +27,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <h1>🛍️ 리셀 가격 관리 시스템</h1>
+      <h1>🛍️ 가격 관리 시스템</h1>
 
       <FileUpload onLoaded={(p) => setProducts(p)} />
 
